@@ -1,0 +1,196 @@
+---
+title: "Untitled"
+output: html_document
+---
+
+```{r setup}
+library(tidyverse)
+```
+
+
+# 1. Relative Path
+
+Shorthand	Meaning
+
+  ~	Home directory
+  .	Current working directory
+  ..	One directory up from current working directory
+  ../..	Two directories up from current working directory
+
+ex.
+abs path = "/Users/jeffgoldsmith/Dropbox/Work/Teaching/P8105/fall_20209/p8105.github.io/data/FAS_litters.csv"
+
+relative path = "./data/FAS_litter.csv"
+
+
+# 2. load csv
+
+package::function
+
+
+
+```{r}
+litters_data = read_csv(file = "./Data/FAS_litters.csv")
+
+#get names
+names(litters_data)
+
+#convert names to all small lettercase
+litters_data = janitor::clean_names(litters_data)   
+# use janitor library, clean_names function, no need to import library
+names(litters_data)
+```
+
+
+# 3. look at data
+
+```{r}
+# overview
+litters_data
+
+#back end, last 5 rows
+tail(litters_data, 5)
+
+#dataset summary
+skimr::skim(litters_data)
+
+#pop-out winodw view data
+view(litters_data)
+```
+
+
+
+# 4. Read func
+
+col_names: 
+usually TRUE. 
+If FALSE, column names are X1, X1, … . You can also supply column names.
+
+na: string vector containing character expressions for missing values.
+
+skip: number of rows to skip before reading data.
+
+```{r}
+# skip 10 rows, set variable names as X1....Xn
+litters_data = read_csv(file = "./Data/FAS_litters.csv", skip = 10, col_names = FALSE)
+head(litters_data)
+```
+
+# 5. Parse Columns
+
+1. col_types = cols(x1 = _type1, x2 = _type2,....):
+specify each cols' variable type
+
+
+```{r}
+litters_data = read_csv(file = "./data/FAS_litters.csv",
+  col_types = cols(
+    Group = col_character(),
+    `Litter Number` = col_character(),
+    `GD0 weight` = col_double(),
+    `GD18 weight` = col_double(),
+    `GD of Birth` = col_integer(),
+    `Pups born alive` = col_integer(),
+    `Pups dead @ birth` = col_integer(),
+    `Pups survive` = col_integer()
+  )
+)
+head(litters_data)
+```
+
+* shorthand variable type:
+(col_types = "ccddiiiddcc....")
+
+```{r}
+litters_data = read_csv(file = "./data/FAS_litters.csv",
+                        col_types = "ccddiiii")
+litters_data
+```
+
+
+## 1. example 
+Repeat the data import process above for the file FAS_pups.csv. Make sure the column names are reasonable, and take some quick looks at the dataset. What happens if your specifications for column parsing aren’t reasonable (e.g. character instead of double, or vice versa)?
+
+```{r}
+pups_data = read_csv(file = "./data/FAS_pups.csv", 
+                     col_types = "ciiiii")
+pups_data
+head(pups_data, 20)
+tail(pups_data, 20)
+
+skimr::skim(pups_data)
+
+```
+
+
+
+
+
+
+# 6. Other format read
+
+read_table:
+all other tyeps
+
+read_excel
+excel type, with sheet option
+                 range option
+                 
+
+```{r}
+library(readxl)
+mlb11_data = read_excel("data/mlb11.xlsx", n_max = 20)
+head(mlb11_data, 15)
+```
+
+
+# 7. Base R
+
+read.csv
+read.table
+
+* produces tibble, prevent unwarranted change
+
+```{r}
+pups_base = read.csv(file = "./data/FAS_pups.csv")
+pups_readr = read_csv(file = "./data/FAS_pups.csv")
+
+skimr::skim(pups_base)
+skimr::skim(pups_readr)
+
+pups_base
+pups_readr
+
+#access Sex variable
+pups_base$S
+pups_readr$S       # readr version can't read by $S
+```
+
+
+
+# 8. export data
+
+write_table
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
